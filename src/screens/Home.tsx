@@ -1,12 +1,16 @@
-import { SafeAreaView, StyleSheet, Text, View, Image, Button, TextInput } from "react-native";
+import { StyleSheet, View, FlatList } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import "react-native-get-random-values";
 import { Task } from "../types/Task";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import DropDownPicker from "react-native-dropdown-picker";
 import { categories } from "../utils/data";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as SQLite from "expo-sqlite";
+import ItemCard from "../components/ItemCard";
+import Animated, {BounceInDown, FlipInYRight,FlipOutYRight } from "react-native-reanimated"
+import CategoryItem from "../components/CategoryItem";
+
 
 const Home = () => {
 
@@ -16,75 +20,131 @@ const Home = () => {
     const [selectedCategory, setSelectCategory] = useState("all");
     const [taskInput, setTaskInput] = useState("");
     const [taskList, setTaskList] = useState<Task[]>([]);
-    const [filteredTasks, setFilteredTask] = useState<Task[]>([]);
 
     useEffect(() => {
-        getData();
+        db.transaction((tx) => {
+            tx.executeSql(
+                "create table if not exists tasks (id integer primary key not null, completed int, title next, category next);"
+            )
+        })
+        getTasks()
     }, []);
 
-    const storeTasks = async (tasks: Task[]) => {
-        try {
-            await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
-        } catch (error) {
-            console.error('Erro ao salvar tarefas:', error);
-        }
-    };
+    //db
+
+    const openDatabase =  () => {
+
+        const db = SQLite.openDatabase("db.db")
+
+        return db
+    }
+
+    const db = openDatabase();
 
     const getTasks = async () => {
-        try {
-            const taskSalvas = await AsyncStorage.getItem('tasks');
-            if (taskSalvas !== null) {
-                setTaskList(JSON.parse(taskSalvas));
-            }
-        } catch (error) {
-            console.error('Erro ao recuperar tarefas:', error);
-        }
+        db.transaction((tx) => {
+            tx.executeSql(
+                `select * from tasks where completed = 0;`,
+                [],
+                (_, { rows: { _array } }) => {
+                    setTaskList(_array);
+                }
+            )
+        })
     };
 
-    const getData = async () => {
-        try {
-            await getTasks();
-        } catch (error) {
-            console.error('Erro ao obter tarefas:', error);
-        }
-    };
+    const getTasksByCategory = (category: string) => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                `select * from tasks where completed = 0 and category = ?;`,
+                [category],
+                (_, { rows: { _array } }) => {
+                    setTaskList(_array);
+                }
+            )
+        })
+    }
+
+    const getCompletedTasks = () => {
+        db.transaction((tx) => {
+            tx.executeSql(
+                `select * from tasks where completed = 1;`,
+                [],
+                (_, { rows: { _array } }) => {
+                    setTaskList(_array);
+                }
+            )
+        })
+    }
 
     const handleAddTask = async () => {
-        if (taskInput.trim() !== "") {
-            const newTaskList = [];
-            const newTask: Task = {
-                id: 1,
-                title: taskInput,
-                category: selectedCategory,
-                completed: 1,
-            };
-            newTaskList.push(newTask);
-            storeTasks(newTaskList);
-            await getData()
-            setTaskInput("")
+        if (taskInput !== "" && categoryValue) {
+            db.transaction((tx) => {
+                tx.executeSql(
+                    `insert into tasks (completed, title, category) values (0, ?, ?)`,
+                    [taskInput, categoryValue]
+                );
+                tx.executeSql(
+                    `select * from tasks where completed = 0;`,
+                    [],
+                    (_, { rows: { _array } }) => {
+                        setTaskList(_array)
+                    }
+                )
+            })
+        }
+
+        setTaskInput("");
+        setCategoryValue(null);
+    }
+
+    const handleRemoveTask = async (id: number) => {
+        db.transaction((tx) => {
+            tx.executeSql("delete from tasks where id = ?", [id]);
+            tx.executeSql(
+                `select * from tasks where completed = 0;`,
+                [],
+                (_, { rows: { _array } }) => {
+                    setTaskList(_array)
+                }
+            )
+        })
+    }
+
+    const handleDoneTask = (id: number) => {
+        db.transaction((tx) => {
+            tx.executeSql("update tasks set completed = ? where id = ? ", [1, id]);
+            tx.executeSql(
+                `select * from tasks where completed = 0;`,
+                [],
+                (_, { rows: { _array }}) => {
+                    setTaskList(_array);
+                }
+            )
+        })
+    }
+
+    const handleSelectedCategory = (type: string) => {
+        setSelectCategory(type);
+    
+        switch (type) {
+            case 'all':
+                getTasks();
+                break;
+            case 'done':
+                getCompletedTasks();
+                break;
+            default:
+                getTasksByCategory(type);
+                break;
         }
     }
 
-    const handleRemoveTask = async (taskId: string) => {
-        //const updatedTaskList = taskList.filter(task => task.id !== taskId)
-
-        //await storeTasks(updatedTaskList)
-
-        //await getData()
-    }
-
-    const handleDoneTask = async (taskId: string) => {
-        const newTaskList = [...taskList]
-    }
+    //db
 
     return (
-        <View>
-            <Text>Home</Text>
-            <TextInput 
-            placeholder="Insira o texto da Nova Tarefa"
-            value={taskInput}
-            onChangeText={setTaskInput}
-            />
+        <View style={styles.container}>
+            <Animated.View style={styles.row} entering={BounceInDown}>
             <DropDownPicker
                 style={styles.dropdown}
                 open={open}
@@ -118,7 +178,22 @@ const Home = () => {
                 }}
                 />
                 <MaterialIcons name="send" size={50} color="#0000FF" />
+            </Animated.View>
+            
+            <Animated.FlatList
+                entering={BounceInDown}
+                data={categories} 
+                renderItem={({ item }) => <CategoryItem item={item} handleSelectCategory={handleSelectedCategory} selectedCategory={selectedCategory}/>}
+                keyExtractor={(item) => item.id.toString()}
+            />
 
+            <Animated.FlatList
+                entering={FlipInYRight}
+                exiting={FlipOutYRight}
+                data={taskList}
+                renderItem={({ item }) => <ItemCard task={item} handleDoneTask={handleDoneTask} handleRemoveTask={handleRemoveTask}/>}
+                keyExtractor={(item) => item.id.toString()}
+            />
         </View>
     );
 };
@@ -126,7 +201,17 @@ const Home = () => {
 const styles = StyleSheet.create ({
     dropdown: {
 
-    }
+    },
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+        paddingHorizontal: 20,
+        paddingTop: 20,
+      },
+      row: {
+        flexDirection: "row",
+        alignItems: "center",
+      },
 })
 
 export default Home;
