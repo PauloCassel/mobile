@@ -4,18 +4,24 @@ import Home from "../screens/Home";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import User from "../screens/User";
 import React from "react";
+import AddHeader from "../components/AddHeader";
 
 const Stack = createNativeStackNavigator();
 
 export const HomeRoutes = () => {
   return (
     <Stack.Navigator>
-    <Stack.Screen
-      name="Home"
-      component={Home}
-      options={{
-        headerTitle: "Home",
-      }}
+      <Stack.Screen
+        name="Todo"
+        component={Home}
+        options={{
+          headerTitle: "Tasks To do",
+          headerStyle: {
+            backgroundColor: "#11212D",
+          },
+          headerTintColor: "#fff",
+          headerRight: () => <AddHeader />,
+        }}
       />
     </Stack.Navigator>
   );
