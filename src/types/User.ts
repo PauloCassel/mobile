@@ -3,7 +3,7 @@ export interface UserDTO {
     username: string;
     email: string;
     firstName: string;
-    LlastName: string;
+    lastName: string;
     gender: string;
     image: string;
     token: string;

@@ -3,7 +3,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Home from "../screens/Home";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import User from "../screens/User";
-import React from "react";
+import AddTask from "../screens/addTask";
 import AddHeader from "../components/AddHeader";
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +23,17 @@ export const HomeRoutes = () => {
           headerRight: () => <AddHeader />,
         }}
       />
+      <Stack.Screen
+        name="AddTask"
+        component={AddTask}
+        options={{
+          headerTitle: "Adicionar Tarefa",
+          headerStyle: {
+            backgroundColor: "#11212D",
+          },
+          headerTintColor: "#fff",
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -35,6 +46,8 @@ export const AppRoutes = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarInactiveBackgroundColor: "#11212D",
+        tabBarActiveBackgroundColor: "#11212D",
       }}
     >
       <Tab.Screen
@@ -42,7 +55,7 @@ export const AppRoutes = () => {
         component={HomeRoutes}
         options={{
           tabBarIcon: () => (
-            <MaterialIcons name="home" size={30} color="#4169E1" />
+            <MaterialIcons name="home" size={30} color="#8da9c4" />
           ),
         }}
       />
@@ -51,7 +64,7 @@ export const AppRoutes = () => {
         component={User}
         options={{
           tabBarIcon: () => (
-            <MaterialIcons name="person" size={30} color="#4169E1" />
+            <MaterialIcons name="person" size={30} color="#8da9c4" />
           ),
         }}
       />

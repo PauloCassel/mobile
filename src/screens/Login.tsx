@@ -5,8 +5,8 @@ import { UserContext } from "../contexts/UserContext";
 
 const Login = () => {
   const { login } = useContext(UserContext);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("paulo");
+  const [password, setPassword] = useState("123");
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,7 +28,7 @@ const Login = () => {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => login(`kminchelle`, `0lelplR`)}
+        onPress={() => login(username, password)}
       >
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>

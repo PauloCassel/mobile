@@ -3,11 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/UserContext";
 
 const User = () => {
-  const {getUser, user, logout} = useContext(UserContext)
-
-  useEffect(() => {
-    getUser();
-  }, [])
+  const {user, logout} = useContext(UserContext)
 
   return (
     <SafeAreaView>
