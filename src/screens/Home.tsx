@@ -1,45 +1,44 @@
-import { StyleSheet, Text, SafeAreaView } from "react-native";
+import { StyleSheet, Text } from "react-native";
 import "react-native-get-random-values";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
+import ItemCard from "../components/ItemCard";
+import { categories } from "../utils/data";
+import { SafeAreaView } from "react-native-safe-area-context";
+import CategoryItem from "../components/CategoryItem";
+import Animated, {
+  BounceInDown,
+  FlipInYRight,
+  FlipOutYRight,
+} from "react-native-reanimated";
 import { UserContext } from "../contexts/UserContext";
 import { TaskContext } from "../contexts/TaskContext";
 import WeekCalendar from "../components/WeekCalendar";
-import { Task } from "../types/Task";
-import { categories } from "../utils/data";
-import * as SQLite from "expo-sqlite";
-import ItemCard from "../components/ItemCard";
-import Animated, {BounceInDown, FlipInYRight,FlipOutYRight } from "react-native-reanimated"
-import CategoryItem from "../components/CategoryItem";
-
 
 const Home = () => {
+  const { user } = useContext(UserContext);
+  const {
+    taskList,
+    selectedCategory,
+    formatedToday,
+    handleSelectCategory,
+    handleRemoveTask,
+    handleDoneTask,
+    db,
+    getTasks,
+  } = useContext(TaskContext);
 
-    const { user } = useContext(UserContext);
-    const {
-      taskList,
-      selectedCategory,
-      formatedToday,
-      handleSelectCategory,
-      handleRemoveTask,
-      handleDoneTask,
-      db,
-      getTasks,
-    } = useContext(TaskContext);
+  useEffect(() => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "create table if not exists tasks (id integer primary key not null, completed int, title text, category text, date text, images text);"
+      );
+    });
+    getTasks();
+  }, []);
 
-    useEffect(() => {
-        db.transaction((tx) => {
-            tx.executeSql(
-                "create table if not exists tasks (id integer primary key not null, completed int, title next, category next);"
-            )
-        })
-        getTasks()
-    }, []);
-
-    //db
-
-    return (
-        <SafeAreaView style={styles.container}>
-      <Text>
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>
         Olá, {user?.firstName.toUpperCase()}, hoje é dia {formatedToday}
       </Text>
 
@@ -88,29 +87,30 @@ const Home = () => {
         >
           <Text style={{ color: "#fff", fontSize: 20 }}>
             {selectedCategory === "done"
-              ? "Eita, nenhuma tarefa concluída! 😢"
-              : "Ufa, não há tarefas! 😋"}
+              ? "Eita, nenhuma tarefa concluída!"
+              : "Ufa, não há tarefas!"}
           </Text>
         </Animated.View>
       )}
     </SafeAreaView>
-    );
+  );
 };
 
-const styles = StyleSheet.create ({
-    dropdown: {
-
-    },
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        paddingHorizontal: 20,
-        paddingTop: 20,
-      },
-      row: {
-        flexDirection: "row",
-        alignItems: "center",
-      },
-})
-
 export default Home;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#11212D",
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    width: "100%",
+  },
+  title: {
+    color: "#fff",
+    fontSize: 20,
+    marginBottom: 20,
+  },
+});

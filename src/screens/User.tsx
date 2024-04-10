@@ -1,5 +1,5 @@
 import { SafeAreaView, StyleSheet, Text, Image, Button } from "react-native";
-import React, { useContext, useEffect } from "react";
+import React, { useContext} from "react";
 import { UserContext } from "../contexts/UserContext";
 
 const User = () => {

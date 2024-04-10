@@ -1,5 +1,4 @@
 import { ReactNode, createContext, useState } from "react";
-
 import * as ImagePicker from "expo-image-picker";
 import * as SQLite from "expo-sqlite";
 import { Task } from "../types/Task";
@@ -125,11 +124,12 @@ export const TaskContextProvider = ({ children }: TaskProviderProps) => {
   };
 
   const handleAddTask = async () => {
+    let image = ''
     if (taskInput !== "" && categoryValue) {
       db.transaction((tx) => {
         tx.executeSql(
-          "insert into tasks (completed, title, category, date, images) values (0, ?, ?, ?, '')",
-          [taskInput, categoryValue, moment(dateInput).format("YYYY-MM-DD")]
+          "insert into tasks (completed, title, category, date, images) values (0, ?, ?, ?, ?)",
+          [taskInput, categoryValue, moment(dateInput).format("YYYY-MM-DD"), image]
         );
         tx.executeSql(
           `select * from tasks where completed = 0;`,
