@@ -69,29 +69,12 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
   };
 
   const login = async (username: string, password: string) => {
-    // try {
-    //   const url = "https://dummyjson.com/auth/login";
-    //   const response = await axios.post<UserDTO>(url, {
-    //     username,
-    //     password,
-    //   });
-
-    //   if (response) {
-    //     setUser(response.data);
-    //     setToken(response.data.token);
-    //     storeToken(response.data.token);
-    //     storeUser(response.data);
-    //   }
-    // } catch (error) {
-    //   showError("Não foi possível realizar o login");
-    // }
-
     const vixe = {
       id: 1,
-      username: "paulo",
-      email: "paulo@gmail.com",
-      firstName: "paulo",
-      lastName: "cassel",
+      username: "Paulo",
+      email: "paulowilliancassel@gmail.com",
+      firstName: "Paulo",
+      lastName: "Cassel",
       gender: "male",
       image: "https://www.futuraexpress.com.br/blog/wp-content/uploads/2020/03/JPG-Alta-Qualidade.jpg",
       token: "123",
@@ -102,9 +85,7 @@ export const UserContextProvider = ({ children }: UserProviderProps) => {
     storeUser(vixe);
   };
 
-  
-
-  const logout = async () => {  
+  const logout = async () => {
     await AsyncStorage.removeItem("@token");
     await AsyncStorage.removeItem("@user");
     setToken("");

@@ -55,39 +55,40 @@ const AddTask = () => {
         placeholder="Criar uma nova tarefa"
         placeholderTextColor="#ccc"
       />
-      <View style={styles.row}>
-        <DropDownPicker
-          style={styles.dropdown}
-          open={open}
-          value={categoryValue}
-          items={categories.filter(
-            (c) => c.value !== "all" && c.value !== "done"
-          )}
-          setOpen={setOpen}
-          setValue={setCategoryValue}
-          placeholder="Escolha uma categoria"
-          theme="DARK"
-          placeholderStyle={{
-            color: "#ccc",
-            fontSize: 16,
-          }}
-          listItemLabelStyle={{
-            color: "#fff",
-            fontSize: 16,
-            paddingLeft: 15,
-          }}
-          dropDownContainerStyle={{
-            backgroundColor: "#11212D",
-          }}
-          selectedItemContainerStyle={{
-            backgroundColor: "#1c2541",
-          }}
-          selectedItemLabelStyle={{
-            fontWeight: "bold",
-            fontSize: 16,
-            color: "#fff",
-          }}
-        />
+      <DropDownPicker
+        style={styles.dropdown}
+        open={open}
+        value={categoryValue}
+        items={categories.filter(
+          (c) => c.value !== "all" && c.value !== "done"
+        )}
+        setOpen={setOpen}
+        setValue={setCategoryValue}
+        placeholder="Escolha uma categoria"
+        theme="DARK"
+        placeholderStyle={{
+          color: "#ccc",
+          fontSize: 16,
+        }}
+        listItemLabelStyle={{
+          color: "#fff",
+          fontSize: 16,
+          paddingLeft: 15,
+        }}
+        dropDownContainerStyle={{
+          backgroundColor: "#11212D",
+          zIndex: 9999, // Ajuste aqui
+        }}
+        selectedItemContainerStyle={{
+          backgroundColor: "#1c2541",
+        }}
+        selectedItemLabelStyle={{
+          fontWeight: "bold",
+          fontSize: 16,
+          color: "#fff",
+        }}
+      />
+      <View style={styles.buttonContainer}>
         <MaterialIcons
           style={styles.icon}
           name="schedule"
@@ -107,33 +108,51 @@ const AddTask = () => {
   );
 };
 
-
 const styles = StyleSheet.create({
   dropdown: {
-    backgroundColor: "#000000",
+    backgroundColor: "#11212D",
+    marginBottom: 10,
+    width: "100%",
+    zIndex: 9999, // Ajuste aqui
   },
   input: {
     color: "#fff",
+    backgroundColor: "#11212D",
+    borderWidth: 1,
+    borderColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    width: "100%",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  button: {
+    backgroundColor: "#11212D",
+    borderRadius: 5,
+    padding: 10,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
   },
   icon: {
-
-  },
-  title: {
+    marginHorizontal: 5,
     color: "#fff",
   },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#000000",
+    backgroundColor: "#11212D",
     paddingHorizontal: 16,
     paddingVertical: 4,
     width: "100%",
   },
-  row: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-})
+});
 
 export default AddTask;

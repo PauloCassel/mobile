@@ -24,10 +24,10 @@ const ItemCard = ({ task, handleRemoveTask, handleDoneTask }: Props) => {
   const handleDelete = () => {
     Alert.alert("Tarefas", "Tem certeza que deseja excluir esta tarefa?", [
       {
-        text: "Nãooooooo",
+        text: "Não",
         style: "cancel",
       },
-      { text: "Simmmm", onPress: () => handleRemoveTask(task.id) },
+      { text: "Sim", onPress: () => handleRemoveTask(task.id) },
     ]);
   };
 
@@ -85,39 +85,50 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderRadius: 5,
+    borderRadius: 10,
     marginVertical: 10,
     width: "100%",
-    padding: 10,
-    backgroundColor: "#1c2541",
+    padding: 15,
+    backgroundColor: "#394867",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   swipeLeft: {
     flex: 1,
     alignItems: "flex-start",
     justifyContent: "center",
-    borderRadius: 5,
+    borderRadius: 10,
     marginVertical: 10,
-    width: 10,
+    width: 40,
     paddingLeft: 20,
-    backgroundColor: "#006400",
+    backgroundColor: "#00b894",
   },
   swipeRight: {
     flex: 1,
     alignItems: "flex-end",
     justifyContent: "center",
-    borderRadius: 5,
+    borderRadius: 10,
     marginVertical: 10,
-    width: 10,
+    width: 40,
     paddingRight: 20,
-    backgroundColor: "#ff0035",
+    backgroundColor: "#e74c3c",
   },
   title: {
     color: "#fff",
     fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 10,
   },
   date: {
     color: "#fff",
     fontSize: 16,
+    marginLeft: 10,
   },
 });
 

@@ -15,7 +15,7 @@ import { TaskContext } from "../contexts/TaskContext";
 import WeekCalendar from "../components/WeekCalendar";
 
 const Home = () => {
-  const { user } = useContext(UserContext);
+  const { user, getUser } = useContext(UserContext);
   const {
     taskList,
     selectedCategory,
@@ -34,12 +34,13 @@ const Home = () => {
       );
     });
     getTasks();
+    getUser(  )
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>
-        Olá, {user?.firstName.toUpperCase()}, hoje é dia {formatedToday}
+        Olá, {user?.firstName} | Data: {formatedToday}
       </Text>
 
       <WeekCalendar />
@@ -87,8 +88,8 @@ const Home = () => {
         >
           <Text style={{ color: "#fff", fontSize: 20 }}>
             {selectedCategory === "done"
-              ? "Eita, nenhuma tarefa concluída!"
-              : "Ufa, não há tarefas!"}
+              ? "Nenhuma tarefa concluída."
+              : "Todas tarefas concluídas."}
           </Text>
         </Animated.View>
       )}

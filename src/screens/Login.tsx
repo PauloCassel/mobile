@@ -5,8 +5,8 @@ import { UserContext } from "../contexts/UserContext";
 
 const Login = () => {
   const { login } = useContext(UserContext);
-  const [username, setUsername] = useState("paulo");
-  const [password, setPassword] = useState("123");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <SafeAreaView style={styles.container}>

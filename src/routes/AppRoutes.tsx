@@ -16,7 +16,7 @@ export const HomeRoutes = () => {
         name="Todo"
         component={Home}
         options={{
-          headerTitle: "Tasks To do",
+          headerTitle: "Tarefas",
           headerStyle: {
             backgroundColor: "#11212D",
           },
@@ -28,7 +28,7 @@ export const HomeRoutes = () => {
         name="AddTask"
         component={AddTask}
         options={{
-          headerTitle: "Adicionar Tarefa",
+          headerTitle: "Adicionar uma Tarefa",
           headerStyle: {
             backgroundColor: "#11212D",
           },

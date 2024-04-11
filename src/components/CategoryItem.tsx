@@ -1,28 +1,41 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Category } from '../types/Task';
+import { Text, TouchableOpacity } from "react-native";
+import React, { FC } from "react";
+import { Category } from "../types/Task";
 
-interface CategoryItemProps {
+interface Props {
   item: Category;
-  handleSelectCategory: (category: string) => void;
+  handleSelectCategory: (type: string) => void;
   selectedCategory: string;
 }
 
-const CategoryItem = ({item, handleSelectCategory}: CategoryItemProps) => {
-    return (
-        <TouchableOpacity onPress={() => handleSelectCategory(item.value)} style={styles.container}>
-            <Text>{item.id}</Text>
-            <Text>{item.label}</Text>
-            <Text>{item.value}</Text>
-            <Text>{item.color}</Text>
-        </TouchableOpacity>
-    )
-}
-
-const styles = StyleSheet.create({
-    container: {
-
-    },
-});
+const CategoryItem: FC<Props> = ({
+  item,
+  handleSelectCategory,
+  selectedCategory,
+}) => {
+  return (
+    <TouchableOpacity onPress={() => handleSelectCategory(item.value)}>
+      <Text
+        style={{
+          backgroundColor: "#394867",
+          color: "#fff",
+          fontSize: 16,
+          marginTop: 8,
+          marginBottom: 25,
+          marginHorizontal: 10,
+          paddingHorizontal: 25,
+          paddingVertical: 10,
+          borderRadius: 10,
+          height: 40,
+          fontWeight: "bold",
+          borderWidth: 2,
+          borderColor: item.value === selectedCategory ? "#fff" : "#aaa",
+        }}
+      >
+        {item.label.toUpperCase()}
+      </Text>
+    </TouchableOpacity>
+  );
+};
 
 export default CategoryItem;
